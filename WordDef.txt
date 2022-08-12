@@ -1,0 +1,7 @@
+A word cannot contain a special character
+A word cannot have more than 2 conseq. letters (book valid, boook not valid) 
+A word can only be between 3 and 15 letters inclusive
+A word cannot contain a hyphen to to seperate words
+
+NOTES:
+cat wlist_match3.txt | grep -o -w '\w\{3,15\}' | sort > output.txt [TO GET STRINGS OF LENGTH BETWEEN 3 AND 15 AND STREAM THEM INTO OUTPUT.TXT]
