@@ -1,10 +1,9 @@
 default: all
 
-clean:
+#Clean the dir (remove output files)
+c:
 	rm -f helloworld
 
-debug:
+#Default action when running make
+all:
 	g++ -Wall -Werror -std=c++14 -g -O -o  helloworld helloworld.cpp
-
-# all: 
-# 	g++ -Wall -Werror -std=c++14 -O -o  question1 question1.cpp
