@@ -5,8 +5,8 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
-#include <list>
-#include <ranges>
+#include <vector>
+#include <set>
 
 bool check_filename (const std::string& name) {
   struct stat buffer;   
@@ -23,17 +23,6 @@ bool valid_length(const std::string& string) {
 
 bool only_lowercase_chars(const std::string& string) {
     return string.find_first_not_of("abcdefghijklmnopqrstuvwxyz") == std::string::npos;
-}
-
-bool duplicate_line(const std::string& string, std::string readLines[]) {
-    //TODO Fix this, not working
-    for(int i = 0; i < *(&readLines + 1) - readLines; i++) {
-        if(readLines[i] == string) {
-            return true; 
-        }
-    }
-
-    return false;
 }
 
 int number_of_lines(std::ifstream * inputFile) {
@@ -55,15 +44,21 @@ void TaskFilter(const std::string& input, const std::string& output) {
 
     std::ifstream InputFile(input); 
     std::ofstream CleanFile(output);
-    std::string readLines[number_of_lines(&InputFile)];
+
+    //By using a set to contain the readLines we are ensuring they're no duplicate entries
+    std::set<std::string> readLines; 
     
     for(std::string curLine; std::getline(InputFile, curLine);) {
         if(!valid_length(curLine)) { continue; }
         if(!only_lowercase_chars(curLine)) { continue; }
-        if(duplicate_line(curLine, readLines)) { continue; }
-        //TODO No more than 2 conseq
+        // //TODO No more than 2 conseq
 
-        CleanFile << curLine << "\n";
+        readLines.insert(curLine);
+    }
+
+
+    for(std::string string: readLines) {
+        CleanFile << string << "\n";
     }
 
     CleanFile.close();
