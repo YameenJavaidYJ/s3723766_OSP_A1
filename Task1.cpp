@@ -9,6 +9,8 @@ int main(int argc, char * argv[]) {
     }
 
     std::cout << "Using input file: " << argv[1] << std::endl;
+
+    //If TaskFilter returns false, there was an error filtering
     if(!TaskFilter(argv[1], argv[2])) { return 0; }
 
     std::cout << "Filtering complete, file '" << argv[2] << "' created!" << std::endl;

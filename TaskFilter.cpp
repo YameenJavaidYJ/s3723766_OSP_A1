@@ -6,22 +6,39 @@
 #include <string>
 #include <set>
 
-
+/*
+    checks a file exists and is accessable
+*/
 bool check_filename (const std::string& name) {
   struct stat buffer;   
   return (stat (name.c_str(), &buffer) == 0); 
 }
 
+/*
+    This function take a string and checks if the length if valid,
+    if a string is less than 3 or greater than 15 false is returned as it is not valid
+    if not true is returned
+*/
 bool valid_length(const std::string string) {
     if(string.length() < 3 || string.length() > 15)
         return false;
     return true;
 }
 
+/*
+    This function takes in a string and checks it only contains lowercase
+    characters
+*/
 bool only_lowercase_chars(const std::string string) {
     return string.find_first_not_of("abcdefghijklmnopqrstuvwxyz") == std::string::npos;
 }
 
+/*
+    This function takes a string and loops through each character
+    and checks if the next 2 letters are the same character
+    if true then the string is invalid as it contains more than 2 conseq
+    chars
+*/
 bool conseq_chars(std::string string) {
     for(int i = 0; i < (int)string.length() - 2; i++)
         if(string[i] == string[i+1] && string[i] == string[i+2])
@@ -29,6 +46,10 @@ bool conseq_chars(std::string string) {
     return false;
 }
 
+/*
+    TaskFilter takes in an input file and output file
+    exported function for the file (entry point)
+*/
 int TaskFilter(const std::string& input, const std::string& output) {
     //Check if the input file is present and accessible, if no print usage
     if(!check_filename(input)) {
@@ -62,6 +83,7 @@ int TaskFilter(const std::string& input, const std::string& output) {
         CleanFile << string << "\n";
     }
 
+    //Close the input and outfile file streams
     InputFile.close();
     CleanFile.close();
     
