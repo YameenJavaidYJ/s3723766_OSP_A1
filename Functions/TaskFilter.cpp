@@ -1,18 +1,8 @@
-#include <sys/stat.h>
-#include <unistd.h>
 #include <fstream>
 #include <iostream>
 #include <algorithm>
 #include <string>
 #include <set>
-
-/*
-    checks a file exists and is accessable
-*/
-bool check_filename (const std::string& name) {
-  struct stat buffer;   
-  return (stat (name.c_str(), &buffer) == 0); 
-}
 
 /*
     This function take a string and checks if the length if valid,
@@ -51,12 +41,6 @@ bool conseq_chars(std::string string) {
     exported function for the file (entry point)
 */
 int TaskFilter(const std::string& input, const std::string& output) {
-    //Check if the input file is present and accessible, if no print usage
-    if(!check_filename(input)) {
-        std::cerr << "File '" << input << "' not found, usage: './Task1 INPUTFILE OUTPUTFILE'" << std::endl;
-        return 0;
-    }; 
-
     //Declare the input and clean files
     std::ifstream InputFile(input); 
     std::ofstream CleanFile(output);
