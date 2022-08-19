@@ -15,9 +15,7 @@ bool comparator(std::string s1, std::string s2) {
     if(s1.length() == 0) { return false; }
     if(s2.length() == 0) { return true; }
 
-    if(s1.substr(2, std::string::npos) <= s2.substr(2, std::string::npos)) { return true; }
-
-    return false; 
+    return s1.substr(2, std::string::npos) < s2.substr(2, std::string::npos);
 }
 
 int map2(const std::string& input, const std::string& output) {

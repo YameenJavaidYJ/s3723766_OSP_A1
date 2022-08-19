@@ -20,7 +20,7 @@ int main(int argc, char * argv[]) {
 
     std::cout << std::to_string(getpid()) + " | Using input file: " << argv[1] << std::endl;
 
-    //If TaskFilter returns false, there was an error filtering
+    //If map2 returns false, there was an error exit
     if(!map2(argv[1], argv[2])) { return 0; }
 
     std::cout << std::to_string(getpid()) + " | Filtering complete, file '" << argv[2] << "' created!" << std::endl;
