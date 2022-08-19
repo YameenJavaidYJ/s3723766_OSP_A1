@@ -5,8 +5,7 @@
 #include <algorithm>
 #include <sys/wait.h>
 #include <unistd.h>
-
-int TaskFilter(const std::string& input, const std::string& output);
+#include <errno.h>
 
 std::ofstream* outputFiles[13]; 
 std::vector<std::string> inputStreams[13]; 
@@ -19,14 +18,12 @@ bool comparator(std::string s1, std::string s2) {
 }
 
 int map2(const std::string& input, const std::string& output) {
-    //If TaskFilter returns false, there was an error filtering
-    if(!TaskFilter(input, output)) { return 0; }
-
     std::cout << std::to_string(getpid()) + " | Filtering complete, file '" << output << "' created!" << std::endl;
     std::cout << std::to_string(getpid()) + " | Creating the individual output files" << std::endl;
 
     for(int i = 0; i <= 12; i++) {
-        outputFiles[i] = new std::ofstream("FilteredFiles/filtered_file_" + std::to_string(i+3) + ".txt", std::ofstream::trunc);
+        std::string outputFile = "FilteredFiles/filter_file_" + std::to_string(i+3) + ".txt";
+        outputFiles[i] = new std::ofstream(outputFile, std::ofstream::trunc);
         std::cout << std::to_string(getpid()) + " | filter_file_" + std::to_string(i+3) + " created" << std::endl; 
     }
 
@@ -49,11 +46,13 @@ int map2(const std::string& input, const std::string& output) {
         }
     }
 
+    while(wait(NULL) != -1 || errno != ECHILD); 
+
     for(int i = 0; i <= 12; i++) {
         outputFiles[i]->close(); 
     }
 
     InputFile.close(); 
 
-    return 0;
+    return 1;
 }

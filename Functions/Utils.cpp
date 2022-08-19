@@ -9,3 +9,7 @@ bool check_filename (const std::string& name) {
   struct stat buffer;   
   return (stat (name.c_str(), &buffer) == 0); 
 }
+
+std::size_t check_filetype (const std::string& name) {
+  return name.find(".txt");
+}
