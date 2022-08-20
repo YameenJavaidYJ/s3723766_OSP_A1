@@ -7,9 +7,17 @@
         {
             "type": "cppdbg",
             "request": "launch",
+            "name": "Task 1 Debug",
+            "program": "${workspaceFolder}/Task1Debug",
+            "args": ["wlist_match3.txt", "outputdebug.txt"],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "cppdbg",
+            "request": "launch",
             "name": "Task 2 Debug",
             "program": "${workspaceFolder}/Task2Debug",
-            "args": ["wlist_match3.txt", "outputdegub.txt"],
+            "args": ["wlist_match3.txt", "outputdebug.txt"],
             "cwd": "${workspaceFolder}"
         }
     ]

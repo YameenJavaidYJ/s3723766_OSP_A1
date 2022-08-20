@@ -1,17 +1,40 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <vector>
 
+const int NUMBER_OF_FILES = 13;
+const int ARRAY_OFFSET = 3;
 
-std::ifstream* inputFiles[12]; 
+void printLog(std::string print);
+void printError(std::string print);
 
-int reduce2(const std::string& output) { 
-    for(int i = 0; i <= 12; i++) { 
-        std::string inputFile = "FilteredFiles/filter_file_" + std::to_string(i+3) + ".txt";
-        inputFiles[i+3] = new std::ifstream(inputFile, std::ofstream::trunc); 
+std::vector<std::string> filteredStreams[NUMBER_OF_FILES];
+
+std::vector<std::string> buildVector() { 
+    std::vector<std::string> toReturn; 
+
+    for(int i = 0; i < NUMBER_OF_FILES; i++) {
+        toReturn.push_back(filteredStreams[i].front()); 
     }
 
-    for(int i = 0; i <= 12; i++) {
-        inputFiles[i]->close(); 
+    return toReturn; 
+}
+
+int reduce2(const std::string &output) {
+    for (int i = 0; i < NUMBER_OF_FILES; i++) {
+        std::string inputFile = "FilteredFiles/filtered_file_" + std::to_string(i + ARRAY_OFFSET) + ".txt";
+        printError("Reading file '" + inputFile + "' into memory for reduce");
+        std::ifstream InputFile(inputFile);
+        for (std::string curLine; std::getline(InputFile, curLine);)
+        {
+            filteredStreams[i].push_back(curLine);
+        }
+        InputFile.close();
     }
+
+    
+
+
+    return 1;
 }

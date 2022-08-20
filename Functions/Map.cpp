@@ -7,24 +7,24 @@
 #include <unistd.h>
 #include <errno.h>
 
-std::ofstream* outputFiles[13]; 
-std::vector<std::string> inputStreams[13]; 
+const int ARRAY_SIZE = 13; 
+const int ARRAY_OFFSET = 3; 
 
-bool comparator(std::string s1, std::string s2) {
-    if(s1.length() == 0) { return false; }
-    if(s2.length() == 0) { return true; }
+bool stringCompareter(std::string s1, std::string s2);
+void printLog(std::string print);
+void printError(std::string print);
 
-    return s1.substr(2, std::string::npos) < s2.substr(2, std::string::npos);
-}
+std::ofstream* outputFiles[ARRAY_SIZE]; 
+std::vector<std::string> inputStreams[ARRAY_SIZE]; 
 
 int map2(const std::string& input, const std::string& output) {
-    std::cout << std::to_string(getpid()) + " | Filtering complete, file '" << output << "' created!" << std::endl;
-    std::cout << std::to_string(getpid()) + " | Creating the individual output files" << std::endl;
+    printLog("Filtering complete, file '" + output + "' created!");
+    printLog("Creating the individual output files");
 
-    for(int i = 0; i <= 12; i++) {
-        std::string outputFile = "FilteredFiles/filter_file_" + std::to_string(i+3) + ".txt";
+    for(int i = 0; i < ARRAY_SIZE; i++) {
+        std::string outputFile = "FilteredFiles/filtered_file_" + std::to_string(i+ARRAY_OFFSET) + ".txt";
         outputFiles[i] = new std::ofstream(outputFile, std::ofstream::trunc);
-        std::cout << std::to_string(getpid()) + " | filter_file_" + std::to_string(i+3) + " created" << std::endl; 
+        printLog("filter_file_" + std::to_string(i+ARRAY_OFFSET) + " created"); 
     }
 
     std::ifstream InputFile(output); 
@@ -33,22 +33,22 @@ int map2(const std::string& input, const std::string& output) {
         inputStreams[curLine.length() - 3].push_back(curLine);
     }
 
-    for(int i = 0; i<=12; i++) {
+    for(int i = 0; i < ARRAY_SIZE; i++) {
         if(fork() == 0) {
-            std::cout << std::to_string(getpid()) + " | Sorting strings of length " + std::to_string(i+3) << std::endl;
-            sort(inputStreams[i].begin(), inputStreams[i].end(), comparator);
-            std::cout << std::to_string(getpid()) + " | Sorting complete for length " + std::to_string(i+3) << std::endl;
+            printLog("Sorting strings of length " + std::to_string(i+ARRAY_OFFSET));
+            sort(inputStreams[i].begin(), inputStreams[i].end(), stringCompareter);
+            printLog("Sorting complete for length " + std::to_string(i+ARRAY_OFFSET));
             for(std::string str: inputStreams[i]) {
                 *outputFiles[i] << str << "\n"; 
             }
-            std::cout << std::to_string(getpid()) + " | Written to filter_file_" + std::to_string(i+3) + ".txt" << std::endl;
+            printLog("Written to filter_file_" + std::to_string(i+ARRAY_OFFSET) + ".txt");
             exit(0);
         }
     }
 
     while(wait(NULL) != -1 || errno != ECHILD); 
 
-    for(int i = 0; i <= 12; i++) {
+    for(int i = 0; i < ARRAY_SIZE; i++) {
         outputFiles[i]->close(); 
     }
 
