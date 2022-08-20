@@ -18,6 +18,7 @@ int main(int argc, char * argv[]) {
     
     std::string input = argv[1]; 
     std::string output = argv[2]; 
+    output = "Outputs/Task1/"+output; 
 
     //Ensure .txt input and outputs
     if(check_filetype(input) == std::string::npos || check_filetype(output) == std::string::npos) {
@@ -35,5 +36,5 @@ int main(int argc, char * argv[]) {
 
     //If TaskFilter returns false, there was an error filtering
     if(!TaskFilter(input, output)) { printError("Error occured while filtering");  return 0; }
-    printLog("Filtering complete, file '" + output + "' created for generic filtered output");
+    printLog("Filtering complete, file '" + output + "' created in 'Outputs/Task1'");
 }

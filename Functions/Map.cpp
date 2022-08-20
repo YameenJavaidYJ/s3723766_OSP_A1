@@ -18,7 +18,6 @@ std::ofstream* outputFiles[ARRAY_SIZE];
 std::vector<std::string> inputStreams[ARRAY_SIZE]; 
 
 int map2(const std::string& input, const std::string& output) {
-    printLog("Filtering complete, file '" + output + "' created!");
     printLog("Creating the individual output files");
 
     for(int i = 0; i < ARRAY_SIZE; i++) {
@@ -30,7 +29,7 @@ int map2(const std::string& input, const std::string& output) {
     std::ifstream InputFile(output); 
     
     for(std::string curLine; std::getline(InputFile, curLine);) {
-        inputStreams[curLine.length() - 3].push_back(curLine);
+        inputStreams[curLine.length() - ARRAY_OFFSET].push_back(curLine);
     }
 
     for(int i = 0; i < ARRAY_SIZE; i++) {

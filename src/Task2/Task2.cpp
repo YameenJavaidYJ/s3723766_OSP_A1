@@ -20,6 +20,7 @@ int main(int argc, char * argv[]) {
     
     std::string input = argv[1]; 
     std::string output = argv[2]; 
+    output = "Outputs/Task2/" + output; 
 
     //Ensure .txt input and outputs
     if(check_filetype(input) == std::string::npos || check_filetype(output) == std::string::npos) {
@@ -46,8 +47,7 @@ int main(int argc, char * argv[]) {
     //Create a _reduced.txt output, if reduce error exit and output
     std::string reducedOutput = output.replace(output.find(".txt"), output.length(), "_reduced.txt"); 
     if(!reduce2(reducedOutput)) { printError("Error occured while reducing"); return 0; }
-    printLog("## Reducing complete, single reduced filter files in Output directory as '" + reducedOutput + "'");
+    printLog("## Reducing complete, single reduced filter files in 'Output/Task2' directory as '" + reducedOutput + "'");
 
-    // Filter, Map, Reduce complete
-    printLog("# Mapping and reducing complete, file '" + reducedOutput + "' created for mapped and reduced output");
+    printLog("# Task 2 Finish, Outputs in 'Outputs/Task2' directory"); 
 }

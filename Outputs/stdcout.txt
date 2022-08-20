@@ -1,0 +1,58 @@
+3855 | # Using input file: wlist_match3.txt
+3855 | ## Filtering complete, file 'Outputs/Task2/output.txt' created for generic filtered output
+3855 | Creating the individual output files
+3855 | filter_file_3 created
+3855 | filter_file_4 created
+3855 | filter_file_5 created
+3855 | filter_file_6 created
+3855 | filter_file_7 created
+3855 | filter_file_8 created
+3855 | filter_file_9 created
+3855 | filter_file_10 created
+3855 | filter_file_11 created
+3855 | filter_file_12 created
+3855 | filter_file_13 created
+3855 | filter_file_14 created
+3855 | filter_file_15 created
+3856 | Sorting strings of length 3
+3857 | Sorting strings of length 4
+3856 | Sorting complete for length 3
+3856 | Written to filter_file_3.txt
+3858 | Sorting strings of length 5
+3859 | Sorting strings of length 6
+3857 | Sorting complete for length 4
+3857 | Written to filter_file_4.txt
+3860 | Sorting strings of length 7
+3861 | Sorting strings of length 8
+3862 | Sorting strings of length 9
+3863 | Sorting strings of length 10
+3864 | Sorting strings of length 11
+3865 | Sorting strings of length 12
+3865 | Sorting complete for length 12
+3865 | Written to filter_file_12.txt
+3858 | Sorting complete for length 5
+3858 | Written to filter_file_5.txt
+3864 | Sorting complete for length 11
+3864 | Written to filter_file_11.txt
+3863 | Sorting complete for length 10
+3861 | Sorting complete for length 8
+3863 | Written to filter_file_10.txt
+3862 | Sorting complete for length 9
+3866 | Sorting strings of length 13
+3862 | Written to filter_file_9.txt
+3867 | Sorting strings of length 14
+3868 | Sorting strings of length 15
+3868 | Sorting complete for length 15
+3868 | Written to filter_file_15.txt
+3867 | Sorting complete for length 14
+3866 | Sorting complete for length 13
+3867 | Written to filter_file_14.txt
+3866 | Written to filter_file_13.txt
+3859 | Sorting complete for length 6
+3859 | Written to filter_file_6.txt
+3861 | Written to filter_file_8.txt
+3860 | Sorting complete for length 7
+3860 | Written to filter_file_7.txt
+3855 | ## Mapping complete, filtered files in 'FilteredFiles' directory
+3855 | ## Reducing complete, single reduced filter files in 'Output/Task2' directory as 'Outputs/Task2/output_reduced.txt'
+3855 | # Task 2 Finish, Outputs in 'Outputs/Task2' directory
