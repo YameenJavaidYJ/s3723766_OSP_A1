@@ -1,6 +1,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <string>
+#include <vector>
 #include <iostream>
 
 /*
@@ -34,4 +35,11 @@ void printLog(std::string print) {
 
 void printError(std::string print) {
   std::cerr << std::to_string(getpid()) + " | " + print << std::endl;
+}
+
+void pop_front(std::vector<std::string> &v)
+{
+    if (v.size() > 0) {
+        v.erase(v.begin());
+    }
 }
