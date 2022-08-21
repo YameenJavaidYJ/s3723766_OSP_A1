@@ -1,6 +1,10 @@
 #include <iostream>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <stdio.h>
+#include <signal.h>
+
+const int GRACEFUL_SECONDS = 10;
 
 void printLog(std::string print);
 void printError(std::string print);
@@ -8,6 +12,10 @@ std::size_t check_filetype (const std::string& name);
 bool check_filename (const std::string& name);
 int TaskFilter(const std::string& input, const std::string& output);
 
+void alarm_handler(int seconds) {
+    std::cerr << "Program running to long, " << GRACEFUL_SECONDS << "s set as the limit, exiting" << std::endl;
+    std::exit(0);
+}
 
 int main(int argc, char * argv[]) { 
         //Ensure args present
@@ -31,6 +39,9 @@ int main(int argc, char * argv[]) {
         printError("File '" + input + "' not found, usage: './Task2 INPUTFILE.txt OUTPUTFILE.txt'");
         return 0;
     }; 
+
+    signal(SIGALRM, alarm_handler); 
+    alarm(GRACEFUL_SECONDS); 
 
     printLog("Using input file: " + input);
 

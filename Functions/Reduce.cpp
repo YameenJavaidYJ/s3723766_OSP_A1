@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include "MinHeap.h"
 
 const int NUMBER_OF_FILES = 13;
 const int ARRAY_OFFSET = 3;
@@ -12,51 +13,27 @@ void pop_front(std::vector<std::string> &v);
 void printLog(std::string print);
 void printError(std::string print);
 
-std::vector<std::string> filteredStreams[NUMBER_OF_FILES];
-int linesRead = 0; 
-
-std::vector<std::string> buildVector() { 
-    std::vector<std::string> toReturn; 
-
-    for(int i = 0; i < NUMBER_OF_FILES; i++) {
-        if(filteredStreams[i].size() > 0)
-            toReturn.push_back(filteredStreams[i].front()); 
-    }
-
-    return toReturn; 
-}
-
-int endOfVec() {
-    for(int i = 0; i < NUMBER_OF_FILES; i++) {
-        if(filteredStreams[i].size() > 0) { return false; } 
-    }
-
-    return true;
-}
+std::vector<std::string> readLines; 
 
 int reduce2(const std::string &output) {
-    for (int i = 0; i < NUMBER_OF_FILES; i++) {
+    for (int i = 0; i < NUMBER_OF_FILES; i++)
+    {
         std::string inputFile = "FilteredFiles/filtered_file_" + std::to_string(i + ARRAY_OFFSET) + ".txt";
         printLog("Reading file '" + inputFile + "' into memory for reduce");
         std::ifstream InputFile(inputFile);
         for (std::string curLine; std::getline(InputFile, curLine);)
         {
-            filteredStreams[i].push_back(curLine);
-            linesRead++; 
+            readLines.push_back(curLine); 
+
         }
         InputFile.close();
     }
 
-    std::ofstream OutputFile(output); 
-    while(linesRead > 0) {
-        std::vector<std::string> nextSort = buildVector(); 
-        //sort(nextSort.begin(), nextSort.end(), stringCompareter);
-        std::string first = nextSort.front(); 
+    std::ofstream OutputFile(output);
 
-        OutputFile << first << std::endl; 
-
-        pop_front(filteredStreams[first.length() - ARRAY_OFFSET]);
-        linesRead--; 
+    sort(readLines.begin(), readLines.end(), stringCompareter);
+    for(std::string string: readLines) {
+        OutputFile << string << std::endl; 
     }
 
     OutputFile.close();

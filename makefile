@@ -3,7 +3,7 @@ default: all
 #Default action when running make
 all:
 	g++ -Wall -Werror -std=c++14 -g -O -o  Executables/Task1  Functions/Utils.cpp Functions/TaskFilter.cpp src/Task1/Task1.cpp
-	g++ -Wall -Werror -std=c++14 -g -O -o  Executables/Task2  Functions/Utils.cpp Functions/TaskFilter.cpp  Functions/Map.cpp Functions/Reduce.cpp src/Task2/Task2.cpp
+	g++ -Wall -Werror -std=c++14 -g -O -o  Executables/Task2  Functions/Utils.cpp Functions/TaskFilter.cpp Functions/Map.cpp Functions/Reduce.cpp src/Task2/Task2.cpp
 
 clean:
 	rm -f Executables/Task1
