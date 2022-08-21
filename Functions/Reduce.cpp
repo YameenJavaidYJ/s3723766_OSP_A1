@@ -3,7 +3,6 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include "MinHeap.h"
 
 const int NUMBER_OF_FILES = 13;
 const int ARRAY_OFFSET = 3;
