@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include "Commons.h"
 
 const int NUMBER_OF_FILES = 13;
 const int ARRAY_OFFSET = 3;
@@ -15,7 +16,7 @@ void printError(std::string print);
 std::vector<std::string> readLines; 
 
 int reduce2(const std::string &output) {
-    for (int i = 0; i < NUMBER_OF_FILES; i++)
+    for (int i = 0; i < NUMBER_OF_FILES && !threadExit; i++)
     {
         std::string inputFile = "FilteredFiles/filtered_file_" + std::to_string(i + ARRAY_OFFSET) + ".txt";
         printLog("Reading file '" + inputFile + "' into memory for reduce");
@@ -31,8 +32,8 @@ int reduce2(const std::string &output) {
     std::ofstream OutputFile(output);
 
     sort(readLines.begin(), readLines.end(), stringCompareter);
-    for(std::string string: readLines) {
-        OutputFile << string << std::endl; 
+    for(int i = 0; i < (int)readLines.size() && !threadExit; i++) {
+        OutputFile << readLines[i] << std::endl; 
     }
 
     OutputFile.close();
