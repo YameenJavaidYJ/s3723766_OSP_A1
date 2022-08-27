@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <string>
 #include <set>
+#include "Commons.h"
 
 /*
     This function take a string and checks if the length if valid,
@@ -48,7 +49,7 @@ int TaskFilter(const std::string& input, const std::string& output) {
     //By using a set to contain the readLines we are ensuring they're no duplicate entries
     std::set<std::string> readLines; 
     
-    for(std::string curLine; std::getline(InputFile, curLine);) {
+    for(std::string curLine; std::getline(InputFile, curLine) &&!threadExit;) {
         //If the string is not between 3 and 15 (inclusive), skip
         if(!valid_length(curLine)) { continue; }
 

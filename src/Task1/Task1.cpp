@@ -18,7 +18,9 @@ void alarm_handler(int seconds) {
 }
 
 int main(int argc, char * argv[]) { 
-        //Ensure args present
+    signal(SIGALRM, alarm_handler); 
+    alarm(GRACEFUL_SECONDS); 
+    
     if(argv[1] == nullptr || argv[2] == nullptr) {
         printError("Invalid usage: './Task2 INPUTFILE.txt OUTPUTFILE.txt'"); 
         return 0; 
@@ -39,9 +41,6 @@ int main(int argc, char * argv[]) {
         printError("File '" + input + "' not found, usage: './Task2 INPUTFILE.txt OUTPUTFILE.txt'");
         return 0;
     }; 
-
-    signal(SIGALRM, alarm_handler); 
-    alarm(GRACEFUL_SECONDS); 
 
     printLog("Using input file: " + input);
 
