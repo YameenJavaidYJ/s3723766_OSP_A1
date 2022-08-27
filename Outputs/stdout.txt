@@ -1,0 +1,16 @@
+9436 | # Using input file: Wordlists/wlist_match1.txt
+9436 | ## Filtering complete, file 'Outputs/Task2/output.txt' created for generic filtered output
+9436 | Creating the individual output files
+9436 | filter_file_3 created
+9436 | filter_file_4 created
+9436 | filter_file_5 created
+9436 | filter_file_6 created
+9436 | filter_file_7 created
+9436 | filter_file_8 created
+9436 | filter_file_9 created
+9436 | filter_file_10 created
+9436 | filter_file_11 created
+9436 | filter_file_12 created
+9436 | filter_file_13 created
+9436 | filter_file_14 created
+9436 | filter_file_15 created

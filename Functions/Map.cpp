@@ -15,19 +15,20 @@ bool stringCompareter(std::string s1, std::string s2);
 void printLog(std::string print);
 void printError(std::string print);
 
-std::ofstream* outputFiles[ARRAY_SIZE]; 
+std::ofstream outputFiles[ARRAY_SIZE]; 
 std::vector<std::string> inputStreams[ARRAY_SIZE]; 
+std::ifstream InputFile; 
 
 int map2(const std::string& input, const std::string& output) {
     printLog("Creating the individual output files");
 
     for(int i = 0; i < ARRAY_SIZE && !threadExit; i++) {
         std::string outputFile = "FilteredFiles/filtered_file_" + std::to_string(i+ARRAY_OFFSET) + ".txt";
-        outputFiles[i] = new std::ofstream(outputFile, std::ofstream::trunc);
+        outputFiles[i].open(outputFile, std::ofstream::trunc);
         printLog("filter_file_" + std::to_string(i+ARRAY_OFFSET) + " created"); 
     }
 
-    std::ifstream InputFile(output); 
+    InputFile.open(output); 
     
     for(std::string curLine; std::getline(InputFile, curLine);) {
         inputStreams[curLine.length() - ARRAY_OFFSET].push_back(curLine);
@@ -39,7 +40,7 @@ int map2(const std::string& input, const std::string& output) {
             sort(inputStreams[i].begin(), inputStreams[i].end(), stringCompareter);
             printLog("Sorting complete for length " + std::to_string(i+ARRAY_OFFSET));
             for(std::string str: inputStreams[i]) {
-                *outputFiles[i] << str << "\n"; 
+                outputFiles[i] << str << "\n"; 
             }
             printLog("Written to filter_file_" + std::to_string(i+ARRAY_OFFSET) + ".txt");
             exit(0);
@@ -49,7 +50,7 @@ int map2(const std::string& input, const std::string& output) {
     while(wait(NULL) != -1 || errno != ECHILD); 
 
     for(int i = 0; i < ARRAY_SIZE; i++) {
-        outputFiles[i]->close(); 
+        outputFiles[i].close(); 
     }
 
     InputFile.close(); 

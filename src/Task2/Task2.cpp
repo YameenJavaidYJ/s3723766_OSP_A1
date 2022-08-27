@@ -18,11 +18,15 @@ int map2(const std::string& input, const std::string& output);
 int reduce2(const std::string& output); 
 
 void alarm_handler(int seconds) {
-    std::cerr << "Program running to long, " << GRACEFUL_SECONDS << "s set as the limit, exiting" << std::endl;
+    printError("Program running to long, " + std::to_string(GRACEFUL_SECONDS) + "s set as the limit, exiting");
     threadExit = true; 
 }
 
 int main(int argc, char * argv[]) { 
+    threadExit = false;
+    signal(SIGALRM, alarm_handler); 
+    // alarm(GRACEFUL_SECONDS); 
+
     //Ensure args present
     if(argv[1] == nullptr || argv[2] == nullptr) {
         printError("Invalid usage: './Task2 INPUTFILE.txt OUTPUTFILE.txt'"); 
@@ -44,9 +48,6 @@ int main(int argc, char * argv[]) {
         printError("File '" + input + "' not found, usage: './Task2 INPUTFILE.txt OUTPUTFILE.txt'");
         return 0;
     }; 
-
-    signal(SIGALRM, alarm_handler); 
-    alarm(GRACEFUL_SECONDS); 
 
     printLog("# Using input file: " + input);
 
