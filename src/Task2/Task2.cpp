@@ -23,7 +23,6 @@ void alarm_handler(int seconds) {
 }
 
 int main(int argc, char * argv[]) { 
-    threadExit = false;
     signal(SIGALRM, alarm_handler); 
     // alarm(GRACEFUL_SECONDS); 
 
@@ -33,9 +32,8 @@ int main(int argc, char * argv[]) {
         return 0; 
     }
     
-    std::string input = argv[1]; 
-    std::string output = argv[2]; 
-    output = "Outputs/Task2/" + output; 
+    std::string input = std::string(argv[1]); 
+    std::string output = "Outputs/Task2/" + std::string(argv[2]); 
 
     //Ensure .txt input and outputs
     if(check_filetype(input) == std::string::npos || check_filetype(output) == std::string::npos) {
@@ -65,4 +63,5 @@ int main(int argc, char * argv[]) {
     printLog("## Reducing complete, single reduced filter files in 'Output/Task2' directory as '" + reducedOutput + "'");
 
     printLog("# Task 2 Finish, Outputs in 'Outputs/Task2' directory"); 
+    return 1;
 }

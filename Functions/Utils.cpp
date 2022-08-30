@@ -29,14 +29,23 @@ bool stringCompareter(std::string s1, std::string s2) {
     return s1.substr(2, std::string::npos) < s2.substr(2, std::string::npos);
 }
 
+/*
+    Utility function for quick logging including the process ID
+*/
 void printLog(std::string print) {
   std::cout << std::to_string(getpid()) + " | " + print << std::endl;
 }
 
+/*
+    Utility function for quick error logging including the process ID
+*/
 void printError(std::string print) {
   std::cerr << std::to_string(getpid()) + " | " + print << std::endl;
 }
 
+/*
+    Utility function to pop the front on an std::vector
+*/
 void pop_front(std::vector<std::string> &v)
 {
     if (v.size() > 0) {

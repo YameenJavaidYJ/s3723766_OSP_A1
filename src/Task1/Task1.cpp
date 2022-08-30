@@ -3,8 +3,10 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <signal.h>
+#include "../../Functions/Commons.h"
 
 const int GRACEFUL_SECONDS = 10;
+bool threadExit = false;
 
 void printLog(std::string print);
 void printError(std::string print);
@@ -14,7 +16,7 @@ int TaskFilter(const std::string& input, const std::string& output);
 
 void alarm_handler(int seconds) {
     std::cerr << "Program running to long, " << GRACEFUL_SECONDS << "s set as the limit, exiting" << std::endl;
-    std::exit(0);
+    threadExit = true; 
 }
 
 int main(int argc, char * argv[]) { 
@@ -26,9 +28,8 @@ int main(int argc, char * argv[]) {
         return 0; 
     }
     
-    std::string input = argv[1]; 
-    std::string output = argv[2]; 
-    output = "Outputs/Task1/"+output; 
+    std::string input = std::string(argv[1]); 
+    std::string output = "Outputs/Task1/" + std::string(argv[2]); 
 
     //Ensure .txt input and outputs
     if(check_filetype(input) == std::string::npos || check_filetype(output) == std::string::npos) {

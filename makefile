@@ -12,10 +12,10 @@ clean:
 	rm -f Executables/Debug/Task2Debug
 
 task1: 
-	g++ -Wall -Werror -std=c++14 -O -o  Executables/Task1  Functions/Utils.cpp Functions/TaskFilter.cpp src/Task1/Task1.cpp
+	g++ -Wall -Werror -std=c++14 -O -o  Executables/Task1 Functions/Commons.h Functions/Utils.cpp Functions/TaskFilter.cpp src/Task1/Task1.cpp
 
 task1-d: 
-	g++ -Wall -Werror -std=c++14 -g -O -o  Executables/Debug/Task1Debug  Functions/Utils.cpp Functions/TaskFilter.cpp src/Task1/Task1.cpp
+	g++ -Wall -Werror -std=c++14 -g -O -o  Executables/Debug/Task1Debug Functions/Commons.h Functions/Utils.cpp Functions/TaskFilter.cpp src/Task1/Task1.cpp
 
 task1-c:
 	rm -f Executables/Task1
