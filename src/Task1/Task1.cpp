@@ -6,7 +6,7 @@
 #include "../../Functions/Commons.h"
 
 const int GRACEFUL_SECONDS = 10;
-bool threadExit = false;
+bool THREADEXIT = false;
 
 void printLog(std::string print);
 void printError(std::string print);
@@ -16,7 +16,7 @@ int TaskFilter(const std::string& input, const std::string& output);
 
 void alarm_handler(int seconds) {
     std::cerr << "Program running to long, " << GRACEFUL_SECONDS << "s set as the limit, exiting" << std::endl;
-    threadExit = true; 
+    THREADEXIT = true; 
 }
 
 int main(int argc, char * argv[]) { 

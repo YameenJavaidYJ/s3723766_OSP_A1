@@ -4,6 +4,14 @@
 #include <vector>
 #include <queue>
 #include <algorithm>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <errno.h>
+#include <unistd.h>
+#include <atomic>
+#include <mutex>
+#include <condition_variable>
 #include "Commons.h"
 
 const int NUMBER_OF_FILES = 13;
@@ -32,7 +40,7 @@ std::string getNextLineFromFile(int fileIndex) {
 }
 
 int reduce2(const std::string &output) {
-    for (int i = 0; i < NUMBER_OF_FILES && !threadExit; i++)
+    for (int i = 0; i < NUMBER_OF_FILES && !THREADEXIT; i++)
     {
         std::ifstream inputStream;
         std::string inputFile = "FilteredFiles/filtered_file_" + std::to_string(i + ARRAY_OFFSET) + ".txt";
@@ -49,7 +57,7 @@ int reduce2(const std::string &output) {
 
     OutputFile.open(output);
 
-    while(!sortingCache.empty() && !threadExit) {
+    while(!sortingCache.empty() && !THREADEXIT) {
         sort(sortingCache.begin(), sortingCache.end(), stringCompareter);
         std::string line = sortingCache.front();
         OutputFile <<  line << "\n"; 
@@ -63,4 +71,34 @@ int reduce2(const std::string &output) {
 
     OutputFile.close();
     return 1;
+}
+
+void* reduce3(void* args) {
+    int fifoHandles[NUMBER_OF_FILES]; 
+
+    printLog("Creating/Openning reduce FIFO Files");
+    for(int i = 0; i < NUMBER_OF_FILES; i++) {
+        if(mkfifo(("FIFOFiles/fifo_file_" + std::to_string(i + ARRAY_OFFSET)).c_str(), 0777) == -1) {
+            if(errno != EEXIST) {
+                printError("Could not create FIFO file for index: " + std::to_string(i+ARRAY_OFFSET));
+                return NULL; 
+            }
+
+            fifoHandles[i] = open(("FIFOFiles/fifo_file_" + std::to_string(i + ARRAY_OFFSET)).c_str(), O_RDONLY);
+        }
+    }
+
+    printLog("Reduce waiting for mapping signal"); 
+    pthread_mutex_lock(&mutex);
+    while (!REDUCESIGNAL) {
+        pthread_cond_wait(&cond, &mutex);
+    }
+    printLog("Mapping signal recieved reduce working..."); 
+
+    printLog("Closing reduce FIFO handles"); 
+    for(int i = 0; i < NUMBER_OF_FILES; i++) { 
+        close(fifoHandles[i]);
+    }
+    // printLog("## Reducing complete, single reduced filter files in 'Output/Task3' directory as '" + reducedOutput + "'");
+    return NULL; 
 }

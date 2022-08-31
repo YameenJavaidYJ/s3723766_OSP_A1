@@ -7,7 +7,7 @@
 #include "../../Functions/Commons.h"
 
 const int GRACEFUL_SECONDS = 10;
-bool threadExit = false;
+bool THREADEXIT = false;
 
 std::size_t check_filetype (const std::string& name);
 bool check_filename (const std::string& name);
@@ -19,7 +19,7 @@ int reduce2(const std::string& output);
 
 void alarm_handler(int seconds) {
     printError("Program running to long, " + std::to_string(GRACEFUL_SECONDS) + "s set as the limit, exiting");
-    threadExit = true; 
+    THREADEXIT = true; 
 }
 
 int main(int argc, char * argv[]) { 

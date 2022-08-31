@@ -1,52 +1,57 @@
 #include <string>
+#include <pthread.h>
 #include <iostream>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <signal.h>
+#include <fstream>
 #include "../../Functions/Commons.h"
 
 const int GRACEFUL_SECONDS = 10;
-bool threadExit;
+bool THREADEXIT = false;
+bool REDUCESIGNAL = false;
+pthread_mutex_t mutex;
+pthread_cond_t cond;
+std::vector<std::string> TASK3_GLOBALSTRINGS; 
 
 std::size_t check_filetype (const std::string& name);
 bool check_filename (const std::string& name);
 void printLog(std::string print);
 void printError(std::string print);
 int TaskFilter(const std::string& input, const std::string& output);
-int map3(const std::string& input, const std::string& output);
-int reduce3(const std::string& output); 
+void* map3(void* args);
+void *reduce3(void* args); 
 
 void alarm_handler(int seconds) {
     printError("Program running to long, " + std::to_string(GRACEFUL_SECONDS) + "s set as the limit, exiting");
-    threadExit = true; 
+    THREADEXIT = true; 
 }
 
 int main(int argc, char * argv[]) { 
-    threadExit = false;
     signal(SIGALRM, alarm_handler); 
     alarm(GRACEFUL_SECONDS); 
 
     //Ensure args present
     if(argv[1] == nullptr || argv[2] == nullptr) {
         printError("Invalid usage: './Task3 INPUTFILE.txt OUTPUTFILE.txt'"); 
-        return 0; 
+        return EXIT_FAILURE; 
     }
     
-    std::string input = argv[1]; 
-    std::string output = argv[2]; 
-    output = "Outputs/Task3/" + output; 
+    std::string input = std::string(argv[1]); 
+    std::string output = "Outputs/Task3/" + std::string(argv[2]); 
 
     //Ensure .txt input and outputs
     if(check_filetype(input) == std::string::npos || check_filetype(output) == std::string::npos) {
         printError("File one of the arguments not .txt format, usage: './Task3 INPUTFILE.txt OUTPUTFILE.txt'");
-        return 0;
+        return EXIT_FAILURE;
     }; 
 
     //Check if the input file is present and accessible, if no print usage
     if(!check_filename(input)) {
         printError("File '" + input + "' not found, usage: './Task3 INPUTFILE.txt OUTPUTFILE.txt'");
-        return 0;
+        return EXIT_FAILURE;
     }; 
     
     printLog("# Using input file: " + input);
@@ -55,14 +60,32 @@ int main(int argc, char * argv[]) {
     if(!TaskFilter(input, output)) { printError("Error occured while filtering"); return 0; }
     printLog("## Filtering complete, file '" + output + "' created for generic filtered output");
 
-    //If map2 returns false, there was an error exit
-    if(!map3(input, output)) { printError("Error occured while mapping "); return 0; }
-    printLog("## Mapping complete, filtered files in 'FilteredFiles' directory");
+    std::ifstream InputFile; 
+    InputFile.open(output); 
+    
+    for(std::string curLine; std::getline(InputFile, curLine);) {
+        TASK3_GLOBALSTRINGS.push_back(curLine); 
+    }
 
-    //Create a _reduced.txt output, if reduce error exit and output
-    std::string reducedOutput = output.replace(output.find(".txt"), output.length(), "_reduced.txt"); 
-    if(!reduce3(reducedOutput)) { printError("Error occured while reducing"); return 0; }
-    printLog("## Reducing complete, single reduced filter files in 'Output/Task3' directory as '" + reducedOutput + "'");
+    InputFile.close(); 
+
+    pthread_t mappingThread; 
+    pthread_t reducingThread; 
+    pthread_mutex_init(&mutex, NULL);
+    pthread_cond_init(&cond, NULL);
+
+    int thread_map_return = pthread_create(&mappingThread, NULL, map3, NULL); 
+    if (thread_map_return) { return EXIT_FAILURE; }
+
+    int thread_reduce_return = pthread_create(&reducingThread, NULL, reduce3, NULL); 
+    if (thread_reduce_return) { return EXIT_FAILURE; }
+
+    pthread_join(mappingThread, NULL); 
+    pthread_join(reducingThread, NULL); 
+
+    pthread_mutex_destroy(&mutex);
+    pthread_cond_destroy(&cond);
 
     printLog("# Task 3 Finish, Outputs in 'Outputs/Task3' directory"); 
+    return EXIT_SUCCESS;
 }

@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include "Commons.h"
 
 /*
     checks a file exists and is accessable
@@ -51,4 +52,18 @@ void pop_front(std::vector<std::string> &v)
     if (v.size() > 0) {
         v.erase(v.begin());
     }
+}
+
+void* writeFIFO(void* args) {
+    struct ThreadParams* mapData = (struct ThreadParams*)args;
+
+    for(int index: mapData->stringIndex) {
+        std::string line = TASK3_GLOBALSTRINGS.at(index); 
+        if(write(mapData->fifoHandle, &line, sizeof(line)) == -1) {
+            printError("Error writing to FIFO File");
+            return NULL; 
+        };
+    }
+
+    return NULL;
 }
