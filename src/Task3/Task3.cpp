@@ -12,8 +12,11 @@
 const int GRACEFUL_SECONDS = 10;
 bool THREADEXIT = false;
 bool REDUCESIGNAL = false;
-pthread_mutex_t mutex;
-pthread_cond_t cond;
+bool MAPSIGNAL = false;
+pthread_mutex_t r_mutex;
+pthread_cond_t r_cond;
+pthread_mutex_t m_mutex;
+pthread_cond_t m_cond;
 std::vector<std::string> TASK3_GLOBALSTRINGS; 
 
 std::size_t check_filetype (const std::string& name);
@@ -30,8 +33,8 @@ void alarm_handler(int seconds) {
 }
 
 int main(int argc, char * argv[]) { 
-    signal(SIGALRM, alarm_handler); 
-    alarm(GRACEFUL_SECONDS); 
+    // signal(SIGALRM, alarm_handler); 
+    // alarm(GRACEFUL_SECONDS); 
 
     //Ensure args present
     if(argv[1] == nullptr || argv[2] == nullptr) {
@@ -71,20 +74,27 @@ int main(int argc, char * argv[]) {
 
     pthread_t mappingThread; 
     pthread_t reducingThread; 
-    pthread_mutex_init(&mutex, NULL);
-    pthread_cond_init(&cond, NULL);
+    pthread_mutex_init(&r_mutex, NULL);
+    pthread_cond_init(&r_cond, NULL);
+    pthread_mutex_init(&m_mutex, NULL);
+    pthread_cond_init(&m_cond, NULL);
 
     int thread_map_return = pthread_create(&mappingThread, NULL, map3, NULL); 
     if (thread_map_return) { return EXIT_FAILURE; }
 
-    int thread_reduce_return = pthread_create(&reducingThread, NULL, reduce3, NULL); 
+    ReduceThreadParams params; 
+    params.output = output.replace(output.find(".txt"), output.length(), "_reduced.txt"); 
+    
+    int thread_reduce_return = pthread_create(&reducingThread, NULL, reduce3, &params); 
     if (thread_reduce_return) { return EXIT_FAILURE; }
 
     pthread_join(mappingThread, NULL); 
     pthread_join(reducingThread, NULL); 
 
-    pthread_mutex_destroy(&mutex);
-    pthread_cond_destroy(&cond);
+    pthread_mutex_destroy(&r_mutex);
+    pthread_cond_destroy(&r_cond);
+    pthread_mutex_destroy(&m_mutex);
+    pthread_cond_destroy(&m_cond);
 
     printLog("# Task 3 Finish, Outputs in 'Outputs/Task3' directory"); 
     return EXIT_SUCCESS;

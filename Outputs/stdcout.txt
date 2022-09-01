@@ -1,24 +1,7 @@
-1875 | # Using input file: Wordlists/wlist_match10.txt
-1875 | ## Filtering complete, file 'Outputs/Task3/output.txt' created for generic filtered output
-1875 | Created index'd array
-1875 | Creating/Openning reduce FIFO Files
-1875 | Creating/Openning map FIFO Files
-1875 | Creating thread 0
-1875 | Creating thread 1
-1875 | Creating thread 2
-1875 | Creating thread 3
-1875 | Creating thread 4
-1875 | Creating thread 5
-1875 | Creating thread 6
-1875 | Creating thread 7
-1875 | Creating thread 8
-1875 | Creating thread 9
-1875 | Creating thread 10
-1875 | Creating thread 11
-1875 | Creating thread 12
-1875 | Reduce waiting for mapping signal
-1875 | Closing map FIFO handles
-1875 | ## Mapping complete, FIFO's created in 'FIFOFiles' directory, reduce thread has been signaled
-1875 | Mapping signal recieved reduce working...
-1875 | Closing reduce FIFO handles
-1875 | # Task 3 Finish, Outputs in 'Outputs/Task3' directory
+14136 | # Using input file: Wordlists/wlist_match8.txt
+14136 | ## Filtering complete, file 'Outputs/Task3/output.txt' created for generic filtered output
+14136 | Created index'd array
+14136 | Creating/Openning reduce FIFO Files
+14136 | Creating/Openning map FIFO Files
+14136 | Map Creating 13 threads
+14136 | Reduce waiting for mapping signal

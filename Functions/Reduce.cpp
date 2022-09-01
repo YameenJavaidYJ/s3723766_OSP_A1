@@ -19,6 +19,7 @@ const int ARRAY_OFFSET = 3;
 
 bool stringCompareter(std::string s1, std::string s2);
 void pop_front(std::vector<std::string> &v);
+int countOfStringsLength(int length);
 void printLog(std::string print);
 void printError(std::string print);
 
@@ -75,6 +76,8 @@ int reduce2(const std::string &output) {
 
 void* reduce3(void* args) {
     int fifoHandles[NUMBER_OF_FILES]; 
+    int arraySizes[NUMBER_OF_FILES]; 
+    struct ReduceThreadParams *mapData = (struct ReduceThreadParams *)args;
 
     printLog("Creating/Openning reduce FIFO Files");
     for(int i = 0; i < NUMBER_OF_FILES; i++) {
@@ -83,22 +86,60 @@ void* reduce3(void* args) {
                 printError("Could not create FIFO file for index: " + std::to_string(i+ARRAY_OFFSET));
                 return NULL; 
             }
-
-            fifoHandles[i] = open(("FIFOFiles/fifo_file_" + std::to_string(i + ARRAY_OFFSET)).c_str(), O_RDONLY);
         }
+        
+        fifoHandles[i] = open(("FIFOFiles/fifo_file_" + std::to_string(i + ARRAY_OFFSET)).c_str(), O_RDONLY);
+        if(fifoHandles[i] == -1) { return NULL; }
+    }
+
+    for(int i = 0; i < NUMBER_OF_FILES; i++) {
+        arraySizes[i] = countOfStringsLength(i+ARRAY_OFFSET); 
     }
 
     printLog("Reduce waiting for mapping signal"); 
-    pthread_mutex_lock(&mutex);
+    pthread_mutex_lock(&r_mutex);
     while (!REDUCESIGNAL) {
-        pthread_cond_wait(&cond, &mutex);
+        pthread_cond_wait(&r_cond, &r_mutex);
     }
     printLog("Mapping signal recieved reduce working..."); 
 
-    printLog("Closing reduce FIFO handles"); 
-    for(int i = 0; i < NUMBER_OF_FILES; i++) { 
+    printLog("Reading FIFO files into memory for reduce");
+    for (int i = 0; i < NUMBER_OF_FILES && !THREADEXIT; i++)
+    {
+        int handle = fifoHandles[i]; 
+        int pipeLength = arraySizes[i]; 
+        int fifoRead[pipeLength]; 
+
+        if(read(handle, fifoRead, sizeof(int)*pipeLength) == -1) {
+            printError("There was an error reading from FIFO " + std::to_string(i));
+            return NULL; 
+        }
+
+
+        for(int j = 0; j < pipeLength; j++) {
+            stringCache[i].push(TASK3_GLOBALSTRINGS.at(fifoRead[j])); 
+        }
+
+        sortingCache.push_back(getNextLineFromFile(i)); 
+
         close(fifoHandles[i]);
     }
-    // printLog("## Reducing complete, single reduced filter files in 'Output/Task3' directory as '" + reducedOutput + "'");
+
+    OutputFile.open(mapData->output);
+
+    while(!sortingCache.empty() && !THREADEXIT) {
+        sort(sortingCache.begin(), sortingCache.end(), stringCompareter);
+        std::string line = sortingCache.front();
+        OutputFile <<  line << "\n"; 
+        pop_front(sortingCache); 
+
+        std::string nextLine = getNextLineFromFile(line.length() - ARRAY_OFFSET); 
+        if(!nextLine.empty()) {
+            sortingCache.push_back(nextLine);
+        }
+    }
+
+    OutputFile.close();
+    printLog("## Reducing complete, single reduced filter files in 'Output/Task3' directory as '" + mapData->output + "'");
     return NULL; 
 }

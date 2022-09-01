@@ -16,6 +16,7 @@ const int ARRAY_SIZE = 13;
 const int ARRAY_OFFSET = 3;
 
 bool stringCompareter(std::string s1, std::string s2);
+bool stringCompareterTask3(int i1, int i2);
 void printLog(std::string print);
 void printError(std::string print);
 void *writeFIFO(void *args);
@@ -75,26 +76,26 @@ void *map3(void *args)
 {
     std::vector<std::vector<int>> indexArray(13, std::vector<int>());
     int fifoHandles[ARRAY_SIZE];
-    ThreadParams params[ARRAY_SIZE];
+    MapThreadParams params[ARRAY_SIZE];
     pthread_t fifoThread[ARRAY_SIZE];
 
     printLog("Created index'd array");
     int counter = 0;
-    for (std::string string : TASK3_GLOBALSTRINGS)
-    {
+    for (std::string string : TASK3_GLOBALSTRINGS)  {
         int length = string.length();
         indexArray.at(length - ARRAY_OFFSET).push_back(counter);
         counter++;
     }
 
-    printLog("Creating/Openning map FIFO Files");
+    for(int i = 0; i < ARRAY_SIZE; i++) {
+        sort(indexArray.at(i).begin(), indexArray.at(i).end(), stringCompareterTask3); 
+    }
 
+    printLog("Creating/Openning map FIFO Files");
     for (int i = 0; i < ARRAY_SIZE; i++)
     {
-        if (mkfifo(("FIFOFiles/fifo_file_" + std::to_string(i + ARRAY_OFFSET)).c_str(), 0777) == -1)
-        {
-            if (errno != EEXIST)
-            {
+        if (mkfifo(("FIFOFiles/fifo_file_" + std::to_string(i + ARRAY_OFFSET)).c_str(), 0777) == -1)    {
+            if (errno != EEXIST)    {
                 printError("Could not create FIFO file for index: " + std::to_string(i + ARRAY_OFFSET));
                 return NULL;
             }
@@ -102,31 +103,32 @@ void *map3(void *args)
 
         int handle = open(("FIFOFiles/fifo_file_" + std::to_string(i + ARRAY_OFFSET)).c_str(), O_WRONLY);
         fifoHandles[i] = handle;
-
-        params[i].fifoHandle = handle;
-        params[i].stringIndex = indexArray.at(i);
-
-        printLog("Creating thread " + std::to_string(i));
-        int thread_return = pthread_create(&fifoThread[i], NULL, writeFIFO, &params[i]);
-        if (thread_return)
-        {
-            return NULL;
-        }
     }
-
-    printLog("Closing map FIFO handles");
+    
+    printLog("Map Creating " + std::to_string(ARRAY_SIZE) + " threads");
     for (int i = 0; i < ARRAY_SIZE; i++)
     {
-        close(fifoHandles[i]);
-        pthread_join(fifoThread[i], NULL);
+        params[i].fifoHandle = fifoHandles[i];
+        params[i].stringIndex = indexArray.at(i);
+
+        int thread_return = pthread_create(&fifoThread[i], NULL, writeFIFO, &params[i]);
+        if (thread_return) { return NULL; }
     }
 
-    pthread_mutex_lock(&mutex);
-    REDUCESIGNAL = true;
-    pthread_mutex_unlock(&mutex);
-    pthread_cond_signal(&cond);
+    for (int i = 0; i < ARRAY_SIZE; i++)
+    {
+        pthread_join(fifoThread[i], NULL);
+        close(fifoHandles[i]);
+    }
+    printLog("Closed mapping FIFO and threads");
 
-    printLog("## Mapping complete, FIFO's created in 'FIFOFiles' directory, reduce thread has been signaled");
+    printLog("Mapping complete, reduce signaled");
+    pthread_mutex_lock(&r_mutex);
+    REDUCESIGNAL = true;
+    pthread_mutex_unlock(&r_mutex);
+    pthread_cond_signal(&r_cond);
+
+    printLog("## Mapping complete, FIFO's created in 'FIFOFiles' directory");
 
     return NULL;
 }
