@@ -25,7 +25,7 @@
             "request": "launch",
             "name": "Task 3 Debug",
             "program": "${workspaceFolder}/Executables/Debug/Task3Debug",
-            "args": ["Wordlists/wlist_match10.txt", "outputdebug.txt"],
+            "args": ["Wordlists/wlist_match3.txt", "outputdebug.txt"],
             "cwd": "${workspaceFolder}"
         }
     ]

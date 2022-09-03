@@ -12,9 +12,6 @@
 #include <sys/types.h>
 #include "Commons.h"
 
-const int ARRAY_SIZE = 13;
-const int ARRAY_OFFSET = 3;
-
 bool stringCompareter(std::string s1, std::string s2);
 bool stringCompareterTask3(int i1, int i2);
 void printLog(std::string print);
@@ -23,18 +20,8 @@ void *writeFIFO(void *args);
 
 int map2(const std::string &input, const std::string &output)
 {
-    std::ofstream outputFiles[ARRAY_SIZE];
-    std::vector<std::string> inputStreams[ARRAY_SIZE];
+    std::vector<std::string> inputStreams[NUMBER_OF_FILES];
     std::ifstream InputFile;
-
-    printLog("Creating the individual output files");
-
-    for (int i = 0; i < ARRAY_SIZE && !THREADEXIT; i++)
-    {
-        std::string outputFile = "FilteredFiles/filtered_file_" + std::to_string(i + ARRAY_OFFSET) + ".txt";
-        outputFiles[i].open(outputFile, std::ofstream::trunc);
-        printLog("filter_file_" + std::to_string(i + ARRAY_OFFSET) + " created");
-    }
 
     InputFile.open(output);
 
@@ -43,31 +30,34 @@ int map2(const std::string &input, const std::string &output)
         inputStreams[curLine.length() - ARRAY_OFFSET].push_back(curLine);
     }
 
-    for (int i = 0; i < ARRAY_SIZE && !THREADEXIT; i++)
+    InputFile.close();
+
+    for (int i = 0; i < NUMBER_OF_FILES && !THREADEXIT; i++)
     {
         if (fork() == 0)
         {
             printLog("Sorting strings of length " + std::to_string(i + ARRAY_OFFSET));
             sort(inputStreams[i].begin(), inputStreams[i].end(), stringCompareter);
             printLog("Sorting complete for length " + std::to_string(i + ARRAY_OFFSET));
+
+            std::ofstream OutputFile;
+            std::string outputFile = "FilteredFiles/filtered_file_" + std::to_string(i + ARRAY_OFFSET) + ".txt";
+            OutputFile.open(outputFile, std::ofstream::trunc);
+            printLog("filter_file_" + std::to_string(i + ARRAY_OFFSET) + " created");
             for (std::string str : inputStreams[i])
             {
-                outputFiles[i] << str << "\n";
+                OutputFile << str << "\n";
             }
             printLog("Written to filter_file_" + std::to_string(i + ARRAY_OFFSET) + ".txt");
+            OutputFile.close();
+            printLog("filter_file_" + std::to_string(i + ARRAY_OFFSET) + " closed, fork finished");
             exit(0);
         }
     }
 
-    while (wait(NULL) != -1 || errno != ECHILD)
-        ;
+    while (wait(NULL) != -1 || errno != ECHILD);
 
-    for (int i = 0; i < ARRAY_SIZE; i++)
-    {
-        outputFiles[i].close();
-    }
-
-    InputFile.close();
+    printLog("Mapping forks finished");
 
     return 1;
 }
@@ -75,9 +65,8 @@ int map2(const std::string &input, const std::string &output)
 void *map3(void *args)
 {
     std::vector<std::vector<int>> indexArray(13, std::vector<int>());
-    int fifoHandles[ARRAY_SIZE];
-    MapThreadParams params[ARRAY_SIZE];
-    pthread_t fifoThread[ARRAY_SIZE];
+    MapThreadParams params[NUMBER_OF_FILES];
+    pthread_t fifoThread[NUMBER_OF_FILES];
 
     printLog("Created index'd array");
     int counter = 0;
@@ -87,38 +76,28 @@ void *map3(void *args)
         counter++;
     }
 
-    for(int i = 0; i < ARRAY_SIZE; i++) {
+    for(std::vector<int> ve: indexArray) {
+        printError(std::to_string(ve.size()));
+    }
+
+
+    for(int i = 0; i < NUMBER_OF_FILES; i++) {
         sort(indexArray.at(i).begin(), indexArray.at(i).end(), stringCompareterTask3); 
     }
-
-    printLog("Creating/Openning map FIFO Files");
-    for (int i = 0; i < ARRAY_SIZE; i++)
-    {
-        if (mkfifo(("FIFOFiles/fifo_file_" + std::to_string(i + ARRAY_OFFSET)).c_str(), 0777) == -1)    {
-            if (errno != EEXIST)    {
-                printError("Could not create FIFO file for index: " + std::to_string(i + ARRAY_OFFSET));
-                return NULL;
-            }
-        }
-
-        int handle = open(("FIFOFiles/fifo_file_" + std::to_string(i + ARRAY_OFFSET)).c_str(), O_WRONLY);
-        fifoHandles[i] = handle;
-    }
     
-    printLog("Map Creating " + std::to_string(ARRAY_SIZE) + " threads");
-    for (int i = 0; i < ARRAY_SIZE; i++)
+    printLog("Map Creating " + std::to_string(NUMBER_OF_FILES) + " threads");
+    for (int i = 0; i < NUMBER_OF_FILES; i++)
     {
-        params[i].fifoHandle = fifoHandles[i];
+        params[i].index = i; 
         params[i].stringIndex = indexArray.at(i);
 
         int thread_return = pthread_create(&fifoThread[i], NULL, writeFIFO, &params[i]);
         if (thread_return) { return NULL; }
     }
 
-    for (int i = 0; i < ARRAY_SIZE; i++)
+    for (int i = 0; i < NUMBER_OF_FILES; i++)
     {
         pthread_join(fifoThread[i], NULL);
-        close(fifoHandles[i]);
     }
     printLog("Closed mapping FIFO and threads");
 

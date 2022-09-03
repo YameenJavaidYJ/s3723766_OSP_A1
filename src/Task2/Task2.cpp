@@ -9,6 +9,15 @@
 const int GRACEFUL_SECONDS = 10;
 bool THREADEXIT = false;
 
+/*
+    NOTE These are included so the Reduce.cpp holding task3 compiles here. 
+    Not used
+*/
+bool REDUCESIGNAL = false;
+pthread_mutex_t r_mutex;
+pthread_cond_t r_cond;
+std::vector<std::string> TASK3_GLOBALSTRINGS; 
+
 std::size_t check_filetype (const std::string& name);
 bool check_filename (const std::string& name);
 void printLog(std::string print);
@@ -29,7 +38,7 @@ int main(int argc, char * argv[]) {
     //Ensure args present
     if(argv[1] == nullptr || argv[2] == nullptr) {
         printError("Invalid usage: './Task2 INPUTFILE.txt OUTPUTFILE.txt'"); 
-        return 0; 
+        return EXIT_FAILURE; 
     }
     
     std::string input = std::string(argv[1]); 
@@ -38,30 +47,30 @@ int main(int argc, char * argv[]) {
     //Ensure .txt input and outputs
     if(check_filetype(input) == std::string::npos || check_filetype(output) == std::string::npos) {
         printError("File one of the arguments not .txt format, usage: './Task2 INPUTFILE.txt OUTPUTFILE.txt'");
-        return 0;
+        return EXIT_FAILURE;
     }; 
 
     //Check if the input file is present and accessible, if no print usage
     if(!check_filename(input)) {
         printError("File '" + input + "' not found, usage: './Task2 INPUTFILE.txt OUTPUTFILE.txt'");
-        return 0;
+        return EXIT_FAILURE;
     }; 
 
     printLog("# Using input file: " + input);
 
     //If TaskFilter returns false, there was an error filtering
-    if(!TaskFilter(input, output)) { printError("Error occured while filtering"); return 0; }
+    if(!TaskFilter(input, output)) { printError("Error occured while filtering"); return EXIT_FAILURE; }
     printLog("## Filtering complete, file '" + output + "' created for generic filtered output");
 
     //If map2 returns false, there was an error exit
-    if(!map2(input, output)) { printError("Error occured while mapping "); return 0; }
+    if(!map2(input, output)) { printError("Error occured while mapping "); return EXIT_FAILURE; }
     printLog("## Mapping complete, filtered files in 'FilteredFiles' directory");
 
     //Create a _reduced.txt output, if reduce error exit and output
     std::string reducedOutput = output.replace(output.find(".txt"), output.length(), "_reduced.txt"); 
-    if(!reduce2(reducedOutput)) { printError("Error occured while reducing"); return 0; }
+    if(!reduce2(reducedOutput)) { printError("Error occured while reducing"); return EXIT_FAILURE; }
     printLog("## Reducing complete, single reduced filter files in 'Output/Task2' directory as '" + reducedOutput + "'");
 
     printLog("# Task 2 Finish, Outputs in 'Outputs/Task2' directory"); 
-    return 1;
+    return EXIT_SUCCESS;
 }

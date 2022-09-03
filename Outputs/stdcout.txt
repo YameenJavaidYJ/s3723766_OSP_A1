@@ -1,7 +1,0 @@
-14136 | # Using input file: Wordlists/wlist_match8.txt
-14136 | ## Filtering complete, file 'Outputs/Task3/output.txt' created for generic filtered output
-14136 | Created index'd array
-14136 | Creating/Openning reduce FIFO Files
-14136 | Creating/Openning map FIFO Files
-14136 | Map Creating 13 threads
-14136 | Reduce waiting for mapping signal

@@ -2,6 +2,9 @@
 #include <string>
 #include <queue>
 
+const int NUMBER_OF_FILES = 13;
+const int ARRAY_OFFSET = 3;
+
 /*
     Global boolean for the main process to signal threads/forks/loops to exit
 */
@@ -16,18 +19,15 @@ extern std::vector<std::string> TASK3_GLOBALSTRINGS;
     Global thread signal for reduce
 */
 extern bool REDUCESIGNAL;
-extern bool MAPSIGNAL;
 extern pthread_mutex_t r_mutex;
 extern pthread_cond_t r_cond;
-extern pthread_mutex_t m_mutex;
-extern pthread_cond_t m_cond;
 
 
 /*
     Struct used to pass vars through to threads
 */
 struct MapThreadParams {
-    int fifoHandle;
+    int index;
     std::vector<int> stringIndex;
 };
 
@@ -42,7 +42,6 @@ struct ReduceThreadParams {
     Struct used to pass vars through to reduce FIFO threads
 */
 struct FIFOThreadParams {
-    int stringLength; 
-    int fifoHandle; 
-    std::queue<std::string> stringCache; 
+    int index;
+    std::queue<std::string>* stringCache; 
 };

@@ -14,12 +14,9 @@
 #include <condition_variable>
 #include "Commons.h"
 
-const int NUMBER_OF_FILES = 13;
-const int ARRAY_OFFSET = 3;
-
 bool stringCompareter(std::string s1, std::string s2);
 void pop_front(std::vector<std::string> &v);
-int countOfStringsLength(int length);
+void *readFIFO(void *args);
 void printLog(std::string print);
 void printError(std::string print);
 
@@ -75,26 +72,25 @@ int reduce2(const std::string &output) {
 }
 
 void* reduce3(void* args) {
-    int fifoHandles[NUMBER_OF_FILES]; 
-    int arraySizes[NUMBER_OF_FILES]; 
+    FIFOThreadParams params[NUMBER_OF_FILES];
+    pthread_t fifoThread[NUMBER_OF_FILES]; 
     struct ReduceThreadParams *mapData = (struct ReduceThreadParams *)args;
 
-    printLog("Creating/Openning reduce FIFO Files");
-    for(int i = 0; i < NUMBER_OF_FILES; i++) {
-        if(mkfifo(("FIFOFiles/fifo_file_" + std::to_string(i + ARRAY_OFFSET)).c_str(), 0777) == -1) {
-            if(errno != EEXIST) {
-                printError("Could not create FIFO file for index: " + std::to_string(i+ARRAY_OFFSET));
-                return NULL; 
-            }
-        }
-        
-        fifoHandles[i] = open(("FIFOFiles/fifo_file_" + std::to_string(i + ARRAY_OFFSET)).c_str(), O_RDONLY);
-        if(fifoHandles[i] == -1) { return NULL; }
+    printLog("Reduce Creating " + std::to_string(NUMBER_OF_FILES) + " threads");
+    for (int i = 0; i < NUMBER_OF_FILES; i++)
+    {
+        params[i].index = i;
+        params[i].stringCache = &stringCache[i]; 
+
+        int thread_return = pthread_create(&fifoThread[i], NULL, readFIFO, &params[i]);
+        if (thread_return) { return NULL; }
     }
 
-    for(int i = 0; i < NUMBER_OF_FILES; i++) {
-        arraySizes[i] = countOfStringsLength(i+ARRAY_OFFSET); 
+    for (int i = 0; i < NUMBER_OF_FILES; i++)
+    {
+        pthread_join(fifoThread[i], NULL);
     }
+    printLog("Reduce threads finished"); 
 
     printLog("Reduce waiting for mapping signal"); 
     pthread_mutex_lock(&r_mutex);
@@ -103,32 +99,16 @@ void* reduce3(void* args) {
     }
     printLog("Mapping signal recieved reduce working..."); 
 
-    printLog("Reading FIFO files into memory for reduce");
-    for (int i = 0; i < NUMBER_OF_FILES && !THREADEXIT; i++)
-    {
-        int handle = fifoHandles[i]; 
-        int pipeLength = arraySizes[i]; 
-        int fifoRead[pipeLength]; 
-
-        if(read(handle, fifoRead, sizeof(int)*pipeLength) == -1) {
-            printError("There was an error reading from FIFO " + std::to_string(i));
-            return NULL; 
-        }
-
-
-        for(int j = 0; j < pipeLength; j++) {
-            stringCache[i].push(TASK3_GLOBALSTRINGS.at(fifoRead[j])); 
-        }
-
+    printLog("Reduce starting merge sort...");
+    for (int i = 0; i < NUMBER_OF_FILES && !THREADEXIT; i++)  {
         sortingCache.push_back(getNextLineFromFile(i)); 
-
-        close(fifoHandles[i]);
     }
 
     OutputFile.open(mapData->output);
 
     while(!sortingCache.empty() && !THREADEXIT) {
         sort(sortingCache.begin(), sortingCache.end(), stringCompareter);
+
         std::string line = sortingCache.front();
         OutputFile <<  line << "\n"; 
         pop_front(sortingCache); 

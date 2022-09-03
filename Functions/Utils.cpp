@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <fcntl.h>
 #include "Commons.h"
 
 /*
@@ -63,7 +64,8 @@ bool stringCompareterTask3(int i1, int i2)
 */
 void printLog(std::string print)
 {
-    std::cout << std::to_string(getpid()) + " | " + print << std::endl;
+    std::cout << std::to_string(getpid()) + " | " + print + "\n";
+    std::cout.flush();
 }
 
 /*
@@ -71,7 +73,8 @@ void printLog(std::string print)
 */
 void printError(std::string print)
 {
-    std::cerr << std::to_string(getpid()) + " | " + print << std::endl;
+    std::cerr << std::to_string(getpid()) + " | " + print + "\n";
+    std::cerr.flush();
 }
 
 /*
@@ -85,30 +88,47 @@ void pop_front(std::vector<std::string> &v)
     }
 }
 
-int countOfStringsLength(int length) {
-    int count = 0; 
-    for(std::string str: TASK3_GLOBALSTRINGS) {
-        if((int)str.length() == length) { count++;}
-    }
+int createOpenFIFO(int index, int flag) {
+    if(mkfifo(("FIFOFiles/fifo_file_" + std::to_string(index + ARRAY_OFFSET)).c_str(), 0777) == -1) {
+            if(errno != EEXIST) {
+                printError("Could not create FIFO file for index: " + std::to_string(index+ARRAY_OFFSET));
+                return -1; 
+            }
+        }
+        
+    int handle = open(("FIFOFiles/fifo_file_" + std::to_string(index + ARRAY_OFFSET)).c_str(), flag);
+    if(handle == -1) { return -1; }
 
-    return count;
+    return handle; 
 }
 
-void *writeFIFO(void *args)
-{
+void *writeFIFO(void *args) {
     struct MapThreadParams *mapData = (struct MapThreadParams *)args;
+    int fifoHandle = createOpenFIFO(mapData->index, O_WRONLY); 
+    if(fifoHandle == -1) { return NULL; }
 
-    int numberOfIndexs = mapData->stringIndex.size(); 
-    int array[numberOfIndexs]; 
-
-    for(int i = 0; i < numberOfIndexs; i++) {
-        array[i] = mapData->stringIndex.at(i); 
-    }
-
-    if (write(mapData->fifoHandle, array, sizeof(int) * numberOfIndexs) == -1) {
-        printError("Error writing to FIFO File");
-        return NULL;
+    for(int index: mapData->stringIndex) {
+        if (write(fifoHandle, &index, sizeof(int)) == -1) {
+            printError("Error writing to FIFO File");
+            return NULL;
+        };
     };
 
+    close(fifoHandle); 
     return NULL;
 }
+
+void *readFIFO(void *args)  {
+    struct FIFOThreadParams *mapData = (struct FIFOThreadParams *)args;
+    int fifoHandle = createOpenFIFO(mapData->index, O_RDONLY); 
+    if(fifoHandle == -1) { return NULL; }
+
+    int index; 
+    while(read(fifoHandle, &index, sizeof(int)) > 0) {
+        mapData->stringCache->push(TASK3_GLOBALSTRINGS.at(index)); 
+    }
+
+    close(fifoHandle); 
+    return NULL;
+}
+
