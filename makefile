@@ -13,6 +13,8 @@ clean:
 	rm -f Executables/Debug/Task2Debug
 	rm -f Executables/Task3
 	rm -f Executables/Debug/Task3Debug
+	rm -f Executables/Task4
+	rm -f Executables/Debug/Task4Debug
 
 task1: 
 	g++ -Wall -Werror -std=c++14 -O -o  Executables/Task1 Functions/Commons.h Functions/Utils.cpp Functions/TaskFilter.cpp src/Task1/Task1.cpp
@@ -43,3 +45,13 @@ task3-d:
 task3-c:
 	rm -f Executables/Task3
 	rm -f Executables/Debug/Task3Debug
+
+task4: 
+	g++ -Wall -Werror -std=c++14 -O -o  Executables/Task4 Functions/Commons.h Functions/Utils.cpp Functions/TaskFilter.cpp  Functions/Map.cpp Functions/Reduce.cpp src/Task4/Task4.cpp -pthread
+
+task4-d: 
+	g++ -Wall -Werror -std=c++14 -g -O -o  Executables/Debug/Task4Debug Functions/Commons.h Functions/Utils.cpp Functions/TaskFilter.cpp  Functions/Map.cpp Functions/Reduce.cpp src/Task4/Task4.cpp -pthread
+
+task4-c:
+	r -f Executables/Task4
+	rm -f Executables/Debug/Task4Debug
