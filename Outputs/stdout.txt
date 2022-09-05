@@ -1,0 +1,84 @@
+4948 - Mon Sep  5 18:59:45 2022 | # Using input file: Wordlists/wlist_match1.txt
+4948 - Mon Sep  5 18:59:46 2022 | ## Filtering complete, file 'Outputs/Task2/output_shell.txt' created for generic filtered output
+4949 - Mon Sep  5 18:59:46 2022 | Sorting strings of length 3
+4950 - Mon Sep  5 18:59:46 2022 | Sorting strings of length 4
+4951 - Mon Sep  5 18:59:46 2022 | Sorting strings of length 5
+4952 - Mon Sep  5 18:59:46 2022 | Sorting strings of length 6
+4953 - Mon Sep  5 18:59:46 2022 | Sorting strings of length 7
+4954 - Mon Sep  5 18:59:46 2022 | Sorting strings of length 8
+4955 - Mon Sep  5 18:59:46 2022 | Sorting strings of length 9
+4956 - Mon Sep  5 18:59:46 2022 | Sorting strings of length 10
+4957 - Mon Sep  5 18:59:46 2022 | Sorting strings of length 11
+4958 - Mon Sep  5 18:59:46 2022 | Sorting strings of length 12
+4959 - Mon Sep  5 18:59:46 2022 | Sorting strings of length 13
+4960 - Mon Sep  5 18:59:46 2022 | Sorting strings of length 14
+4949 - Mon Sep  5 18:59:46 2022 | Sorting complete for length 3
+4949 - Mon Sep  5 18:59:46 2022 | filter_file_3 created
+4949 - Mon Sep  5 18:59:46 2022 | Written to filter_file_3.txt
+4949 - Mon Sep  5 18:59:46 2022 | filter_file_3 closed, fork finished
+4961 - Mon Sep  5 18:59:46 2022 | Sorting strings of length 15
+4961 - Mon Sep  5 18:59:46 2022 | Sorting complete for length 15
+4961 - Mon Sep  5 18:59:46 2022 | filter_file_15 created
+4961 - Mon Sep  5 18:59:46 2022 | Written to filter_file_15.txt
+4961 - Mon Sep  5 18:59:46 2022 | filter_file_15 closed, fork finished
+4960 - Mon Sep  5 18:59:46 2022 | Sorting complete for length 14
+4960 - Mon Sep  5 18:59:46 2022 | filter_file_14 created
+4960 - Mon Sep  5 18:59:46 2022 | Written to filter_file_14.txt
+4960 - Mon Sep  5 18:59:46 2022 | filter_file_14 closed, fork finished
+4959 - Mon Sep  5 18:59:46 2022 | Sorting complete for length 13
+4959 - Mon Sep  5 18:59:46 2022 | filter_file_13 created
+4959 - Mon Sep  5 18:59:46 2022 | Written to filter_file_13.txt
+4959 - Mon Sep  5 18:59:46 2022 | filter_file_13 closed, fork finished
+4950 - Mon Sep  5 18:59:46 2022 | Sorting complete for length 4
+4950 - Mon Sep  5 18:59:46 2022 | filter_file_4 created
+4950 - Mon Sep  5 18:59:46 2022 | Written to filter_file_4.txt
+4950 - Mon Sep  5 18:59:46 2022 | filter_file_4 closed, fork finished
+4958 - Mon Sep  5 18:59:46 2022 | Sorting complete for length 12
+4958 - Mon Sep  5 18:59:46 2022 | filter_file_12 created
+4958 - Mon Sep  5 18:59:46 2022 | Written to filter_file_12.txt
+4958 - Mon Sep  5 18:59:46 2022 | filter_file_12 closed, fork finished
+4957 - Mon Sep  5 18:59:46 2022 | Sorting complete for length 11
+4957 - Mon Sep  5 18:59:46 2022 | filter_file_11 created
+4957 - Mon Sep  5 18:59:46 2022 | Written to filter_file_11.txt
+4957 - Mon Sep  5 18:59:46 2022 | filter_file_11 closed, fork finished
+4951 - Mon Sep  5 18:59:46 2022 | Sorting complete for length 5
+4951 - Mon Sep  5 18:59:46 2022 | filter_file_5 created
+4951 - Mon Sep  5 18:59:46 2022 | Written to filter_file_5.txt
+4951 - Mon Sep  5 18:59:46 2022 | filter_file_5 closed, fork finished
+4956 - Mon Sep  5 18:59:46 2022 | Sorting complete for length 10
+4956 - Mon Sep  5 18:59:46 2022 | filter_file_10 created
+4956 - Mon Sep  5 18:59:46 2022 | Written to filter_file_10.txt
+4956 - Mon Sep  5 18:59:46 2022 | filter_file_10 closed, fork finished
+4952 - Mon Sep  5 18:59:46 2022 | Sorting complete for length 6
+4952 - Mon Sep  5 18:59:46 2022 | filter_file_6 created
+4952 - Mon Sep  5 18:59:46 2022 | Written to filter_file_6.txt
+4952 - Mon Sep  5 18:59:46 2022 | filter_file_6 closed, fork finished
+4955 - Mon Sep  5 18:59:46 2022 | Sorting complete for length 9
+4955 - Mon Sep  5 18:59:46 2022 | filter_file_9 created
+4955 - Mon Sep  5 18:59:46 2022 | Written to filter_file_9.txt
+4955 - Mon Sep  5 18:59:46 2022 | filter_file_9 closed, fork finished
+4954 - Mon Sep  5 18:59:46 2022 | Sorting complete for length 8
+4954 - Mon Sep  5 18:59:46 2022 | filter_file_8 created
+4953 - Mon Sep  5 18:59:46 2022 | Sorting complete for length 7
+4953 - Mon Sep  5 18:59:46 2022 | filter_file_7 created
+4954 - Mon Sep  5 18:59:46 2022 | Written to filter_file_8.txt
+4954 - Mon Sep  5 18:59:46 2022 | filter_file_8 closed, fork finished
+4953 - Mon Sep  5 18:59:46 2022 | Written to filter_file_7.txt
+4953 - Mon Sep  5 18:59:46 2022 | filter_file_7 closed, fork finished
+4948 - Mon Sep  5 18:59:46 2022 | Mapping forks finished
+4948 - Mon Sep  5 18:59:46 2022 | ## Mapping complete, filtered files in 'FilteredFiles' directory
+4948 - Mon Sep  5 18:59:46 2022 | Reading file 'FilteredFiles/filtered_file_3.txt' into memory for reduce
+4948 - Mon Sep  5 18:59:46 2022 | Reading file 'FilteredFiles/filtered_file_4.txt' into memory for reduce
+4948 - Mon Sep  5 18:59:46 2022 | Reading file 'FilteredFiles/filtered_file_5.txt' into memory for reduce
+4948 - Mon Sep  5 18:59:46 2022 | Reading file 'FilteredFiles/filtered_file_6.txt' into memory for reduce
+4948 - Mon Sep  5 18:59:46 2022 | Reading file 'FilteredFiles/filtered_file_7.txt' into memory for reduce
+4948 - Mon Sep  5 18:59:46 2022 | Reading file 'FilteredFiles/filtered_file_8.txt' into memory for reduce
+4948 - Mon Sep  5 18:59:46 2022 | Reading file 'FilteredFiles/filtered_file_9.txt' into memory for reduce
+4948 - Mon Sep  5 18:59:46 2022 | Reading file 'FilteredFiles/filtered_file_10.txt' into memory for reduce
+4948 - Mon Sep  5 18:59:46 2022 | Reading file 'FilteredFiles/filtered_file_11.txt' into memory for reduce
+4948 - Mon Sep  5 18:59:46 2022 | Reading file 'FilteredFiles/filtered_file_12.txt' into memory for reduce
+4948 - Mon Sep  5 18:59:46 2022 | Reading file 'FilteredFiles/filtered_file_13.txt' into memory for reduce
+4948 - Mon Sep  5 18:59:46 2022 | Reading file 'FilteredFiles/filtered_file_14.txt' into memory for reduce
+4948 - Mon Sep  5 18:59:46 2022 | Reading file 'FilteredFiles/filtered_file_15.txt' into memory for reduce
+4948 - Mon Sep  5 18:59:47 2022 | ## Reducing complete, single reduced filter files in 'Output/Task2' directory as 'Outputs/Task2/output_shell_reduced.txt'
+4948 - Mon Sep  5 18:59:47 2022 | # Task 2 Finish, Outputs in 'Outputs/Task2' directory
