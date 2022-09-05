@@ -62,23 +62,11 @@ bool stringCompareterTask3(int i1, int i2)
 }
 
 /*
-    Utility function to get the current system's time and format it 
-*/
-std::string formattedTime() {
-    auto currentTime = std::chrono::system_clock::now(); // get the time
-    auto formattedTime = std::chrono::system_clock::to_time_t(currentTime); // convert it to time_t type (loses some precision)
-    std::string time = std::ctime(&formattedTime); // print it formatted
-    time.erase(std::remove(time.begin(), time.end(), '\n'), time.cend());
-
-    return time; 
-}
-
-/*
     Utility function for quick logging including the process ID
 */
 void printLog(std::string print)
 {
-    std::cout << std::to_string(getpid()) + " - " + formattedTime() + " | " + print + "\n";
+    std::cout << std::to_string(getpid()) + " | " + print + "\n";
     std::cout.flush();
 }
 
@@ -87,7 +75,7 @@ void printLog(std::string print)
 */
 void printError(std::string print)
 {
-    std::cerr << std::to_string(getpid()) + " - " + formattedTime() +  " | " + print + "\n";
+    std::cerr << std::to_string(getpid()) + " | " + print + "\n";
     std::cerr.flush();
 }
 
